@@ -61,7 +61,10 @@ export default function Posts() {
             {posts.map((post: Post, index) => (
               <motion.div
                 key={post.id}
-                animate={{ opacity: hover ? 0.3 : 1 }}
+                animate={{
+                  opacity: hover ? 0.3 : 1,
+                  transition: { delay: index * 0.2 },
+                }}
                 whileHover={{ opacity: 1 }}
               >
                 <Box as="li">
