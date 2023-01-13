@@ -8,16 +8,15 @@ export type Post = {
   user?: User;
 };
 
-export async function getPosts(): Promise<Post[] | null> {
+export async function getPosts(): Promise<any> {
   try {
-    const response = await fetch('https://dummyjson.com/posts');
-    const data = await response.json();
+    const response = await fetch(`${process.env.URL}/api/entries`);
+    const {
+      items,
+      includes: { Asset: includes },
+    } = await response.json();
 
-    if (data.message) {
-      return null;
-    }
-
-    return data.posts;
+    return { items, includes };
   } catch (err) {
     return null;
   }

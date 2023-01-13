@@ -17,30 +17,16 @@ export function links() {
 }
 
 export const loader = async () => {
-  const posts = await getPosts();
-  if (!posts) {
-    return json({ posts });
+  const { items, includes } = await getPosts();
+  if (!items) {
+    return json({ posts: items, includes });
   }
 
-  const users = await getUsers();
-  if (!users) {
-    return json({ posts });
-  }
-
-  const newPosts = posts.map((post) => {
-    const user = users.find((user) => user.id === post.userId);
-
-    return {
-      ...post,
-      user,
-    };
-  });
-
-  return json({ posts: newPosts });
+  return json({ posts: items, includes });
 };
 
 export default function Posts() {
-  const { posts } = useLoaderData<typeof loader>();
+  const { posts, includes } = useLoaderData<typeof loader>();
   const [hover, setHover] = useState(false);
 
   return (
@@ -58,21 +44,24 @@ export default function Posts() {
           }}
         >
           <SimpleGrid as="ul" columns={3} spacing={10}>
-            {posts.map((post: Post, index) => (
+            {posts.map((post: any, index: number) => (
               <motion.div
-                key={post.id}
+                key={post.sys.id}
                 animate={{
                   opacity: hover ? 0.3 : 1,
-                  transition: { delay: index * 0.2 },
                 }}
                 whileHover={{ opacity: 1 }}
               >
                 <Box as="li">
-                  <Link to={`/posts/${post.id}`}>
+                  <Link to={`/posts/${post.sys.id}`}>
                     <Card
-                      id={post.id}
+                      id={post.sys.id}
+                      image={includes.find(
+                        (asset: any) =>
+                          asset.sys.id === post.fields.shareImages[0].sys.id
+                      )}
                       newBadge={index === 0}
-                      title={post.title}
+                      title={post.fields.pageTitle}
                       user={`${post.user?.firstName} ${post.user?.lastName}`}
                     />
                   </Link>

@@ -5,12 +5,13 @@ interface Props {
   title: string;
   user: string;
   newBadge?: boolean;
+  image?: any;
 }
 
-export default function Card({ id, title, user, newBadge }: Props) {
+export default function Card({ title, user, newBadge, image }: Props) {
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
-      <Image src={`https://picsum.photos/400/400?random=${id}`} alt={title} />
+      <Image src={`${image.fields.file.url}`} alt={title} />
 
       <Box p="6">
         {newBadge && (
