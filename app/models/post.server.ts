@@ -10,7 +10,7 @@ export type Post = {
 
 export async function getPosts(): Promise<any> {
   try {
-    const response = await fetch(`${process.env.URL}/api/entries`);
+    const response = await fetch(`${process.env.APPURL}/api/entries`);
     const {
       items,
       includes: { Asset: includes },
