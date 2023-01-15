@@ -1,37 +1,26 @@
-import type { User } from './user.server';
-
-export type Post = {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
-  user?: User;
-};
-
 export async function getPosts(): Promise<any> {
   try {
     const response = await fetch(`${process.env.URL}/api/entries`);
     const {
       items,
-      includes: { Asset: includes },
+      includes: { Entry: entries, Asset: assets },
     } = await response.json();
 
-    return { items, includes };
+    return { items, entries, assets };
   } catch (err) {
     return null;
   }
 }
 
-export async function getPost(id?: string): Promise<Post | null> {
+export async function getPost(slug?: string): Promise<any> {
   try {
-    const response = await fetch(`https://dummyjson.com/posts/${id}`);
-    const data = await response.json();
+    const response = await fetch(`${process.env.URL}/api/entries/${slug}`);
+    const {
+      items,
+      includes: { Entry: entries, Asset: assets },
+    } = await response.json();
 
-    if (data.message) {
-      return null;
-    }
-
-    return data;
+    return { item: items[0], entries, assets };
   } catch (err) {
     return null;
   }
