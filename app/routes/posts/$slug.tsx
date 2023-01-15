@@ -10,7 +10,14 @@ export const loader = async ({ params }: LoaderArgs) => {
     return json({ post: null, entries: null });
   }
 
-  const { item, assets, entries } = await getPost(params.slug);
+  const data = await getPost(params.slug);
+  if (!data) {
+    throw new Response('Not Found', {
+      status: 404,
+    });
+  }
+
+  const { item, assets, entries } = data;
 
   return json({ post: item, assets, entries });
 };

@@ -15,10 +15,16 @@ export async function getPosts(): Promise<any> {
 export async function getPost(slug?: string): Promise<any> {
   try {
     const response = await fetch(`${process.env.URL}/api/entries/${slug}`);
+    const data = await response.json();
+
+    if (data.items.length === 0) {
+      return null;
+    }
+
     const {
       items,
       includes: { Entry: entries, Asset: assets },
-    } = await response.json();
+    } = data;
 
     return { item: items[0], entries, assets };
   } catch (err) {
